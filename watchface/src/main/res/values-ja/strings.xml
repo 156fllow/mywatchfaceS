@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meridian</string>
+    <string name="config_theme">テーマカラー</string>
+    <string name="config_seconds">秒針</string>
+    <string name="config_gauges">バッテリー / 歩数ゲージ</string>
+    <string name="slot_bottom">下部（次の予定）</string>
+    <string name="theme_champagne">シャンパン</string>
+    <string name="theme_glacier">グレイシャー</string>
+    <string name="theme_sage">セージ</string>
+    <string name="theme_coral">コーラル</string>
+    <string name="theme_lavender">ラベンダー</string>
+    <string name="theme_graphite">グラファイト</string>
+</resources>
