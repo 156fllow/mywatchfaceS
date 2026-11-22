@@ -20,11 +20,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Check that the committed watchface.xml matches the generator output
-      - name: Check generated XML is up to date
+      # Check that the committed watchface.xml matches the generator output,
+      # and generate preview images on CI (so the build works even without committed PNGs)
+      - name: Generate watch face resources
         run: |
-          python3 tools/generate.py --xml
-          git diff --exit-code -- watchface/src/main/res
+          sudo apt-get update -q && sudo apt-get install -y -q fonts-inter
+          pip install pillow
+          python3 tools/generate.py
+          git diff --exit-code -- watchface/src/main/res/raw watchface/src/main/res/values watchface/src/main/res/values-ja
 
       # Validate against the XSD with Google's official Watch Face Format validator
       - name: Build official WFF validator
@@ -39,9 +42,11 @@ jobs:
             1 watchface/src/main/res/raw/watchface.xml
 
       - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.3"
 
       - name: Build APK / AAB
-        run: ./gradlew --no-daemon :watchface:assembleDebug :watchface:bundleRelease
+        run: gradle --no-daemon :watchface:assembleDebug :watchface:bundleRelease
 
       - uses: actions/upload-artifact@v4
         with:
