@@ -18,9 +18,11 @@ android {
 
     buildTypes {
         release {
-            // WFF watch faces contain no code, so minify is disabled
-            isMinifyEnabled = false
+            // WFF watch faces must not contain dex files (minSdk >= 33).
+            // Enabling R8 strips the empty dex so the bundle passes the check.
+            isMinifyEnabled = true
             isShrinkResources = false
+            signingConfig = signingConfigs.getByName("debug") // replace with your own key before publishing
         }
     }
 }
