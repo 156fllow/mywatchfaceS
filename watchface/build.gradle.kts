@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.mywatchfaces.meridian"
-        // Wear OS 4 (API 33) and later = Watch Face Format v1 supported (Pixel Watch 2/3/4)
+        // Wear OS 4 (API 33) and later = Watch Face Format v1 supported (Pixel Watch 1st gen / 2 / 3 / 4)
         minSdk = 33
         targetSdk = 35
         versionCode = 1

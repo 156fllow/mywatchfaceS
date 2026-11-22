@@ -1,6 +1,6 @@
 # Meridian — Pixel Watch 用ウォッチフェイス
 
-アナログ針と必要な情報をすっきりまとめた、Pixel Watch 2 / 3 / 4 向けのハイブリッド型ウォッチフェイスです。
+アナログ針と必要な情報をすっきりまとめた、Pixel Watch（初代 / 2 / 3 / 4）向けのハイブリッド型ウォッチフェイスです。
 Google 推奨の **Watch Face Format (WFF) v1** で作っているため、コードを含まず、電池への負担が小さいのが特長です。
 
 ![preview](watchface/src/main/res/drawable-nodpi/preview.png)
@@ -82,5 +82,6 @@ Android Studio（または Android SDK と JDK 17）がある環境で、次の�
 - 必要に応じて `tools/generate.py` の `PREVIEW_TIME` やプレビュー画像を調整してください
 
 ## 動作要件
-- Wear OS 4（API 33）以降。Pixel Watch 2 / 3 / 4 が対象です
+- Wear OS 4（API 33）以降。Pixel Watch（初代 / 2 / 3 / 4）が対象です
+- 初代 Pixel Watch で使う場合は、システムアップデートで Wear OS 4 以降にしてください（「設定 → システム → デバイス情報 → バージョン」で確認できます）
 - 心拍数と歩数は、端末の権限設定によっては、初回に許可を求められるか、許可するまで表示されません
