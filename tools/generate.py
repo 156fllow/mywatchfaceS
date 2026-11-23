@@ -75,6 +75,7 @@ ACCENT = "[CONFIGURATION.theme.0]"
 ACCENT_DIM = "[CONFIGURATION.theme.1]"
 
 FONT = "SYNC_TO_DEVICE"
+TEXT_LINE = 1.75  # minimum text box height as a multiple of the font size
 
 
 def polar(r: float, deg: float) -> tuple[float, float]:
@@ -133,10 +134,18 @@ def full_draw(x: X, name: str) -> None:
 def text_part(x: X, name: str, px, py, w, h, size, color, content: str | None = None,
               template: tuple[str, list[str]] | None = None, weight="NORMAL",
               align="CENTER", upper=False, ambient_alpha: int | None = None) -> None:
+    # Device fonts (Google Sans / Japanese fonts) have a much taller line height than the
+    # font size. If the box is shorter than one line the text is ellipsised or not drawn at
+    # all, so grow every box vertically around its centre to at least TEXT_LINE x size.
+    need = size * TEXT_LINE
+    if h < need:
+        py -= (need - h) / 2
+        h = need
+    px, py, w, h = round(px), round(py), round(w), round(h)
     x.open("PartText", name=name, x=px, y=py, width=w, height=h)
     if ambient_alpha is not None:
         x.leaf("Variant", mode="AMBIENT", target="alpha", value=ambient_alpha)
-    x.open("Text", align=align, ellipsis="TRUE")
+    x.open("Text", align=align, ellipsis="TRUE", maxLines=1)
     x.open("Font", family=FONT, size=size, weight=weight, color=color)
     if upper:
         x.open("Upper")
@@ -325,7 +334,7 @@ def build_xml() -> str:
 
     # ---- Next event complication -------------------------------------------
     x.comment("Bottom: next calendar event (user can pick any SHORT_TEXT / LONG_TEXT provider)")
-    cw, ch = 210, 52
+    cw, ch = 236, 52
     cx, cy = C - cw / 2, 314
     x.open("ComplicationSlot", slotId=0, name="next_event", displayName="@string/slot_bottom",
            x=cx, y=cy, width=cw, height=ch, supportedTypes="LONG_TEXT SHORT_TEXT EMPTY",
@@ -580,7 +589,7 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
     text(str(data["day"]), (145, 94, 160, 44), 36, col(WHITE, da), "Light")
 
     # complication
-    cw, ch = 210, 52
+    cw, ch = 236, 52
     cx, cy = C - cw / 2, 314
     ca = 170 / 255 if ambient else 1
     layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
