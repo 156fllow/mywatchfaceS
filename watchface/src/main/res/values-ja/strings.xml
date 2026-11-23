@@ -5,6 +5,8 @@
     <string name="config_seconds">秒針</string>
     <string name="config_gauges">バッテリー / 歩数ゲージ</string>
     <string name="slot_bottom">下部（次の予定）</string>
+    <string name="slot_left">左上（天気）</string>
+    <string name="slot_right">右上（日の出・日の入り）</string>
     <string name="theme_champagne">シャンパン</string>
     <string name="theme_glacier">グレイシャー</string>
     <string name="theme_sage">セージ</string>

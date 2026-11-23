@@ -39,6 +39,10 @@ ARC_THICK = 5
 BATT_START, BATT_SPAN = 235, 70    # left side, upward from bottom-left
 STEP_END, STEP_SPAN = 125, 70      # right side, upward from bottom-right
 
+# Small circular complication slots (upper left / upper right of the date)
+SUB_D = 56                       # diameter
+SUB_R_POS, SUB_ANGLE = 128, 35   # placed at 360-35 deg (left) and 35 deg (right)
+
 # Unread-notification dot (bottom, between the event pill and the 6 o'clock index)
 NOTIF_Y, NOTIF_R = 388, 4
 
@@ -358,6 +362,87 @@ def build_xml() -> str:
     x.close("Complication")
     x.close("ComplicationSlot")
 
+    # ---- Small circular slots (upper left / right) ---------------------------
+    x.comment("Upper-left / upper-right circular slots (default: weather picked by user / sunrise-sunset)")
+
+    def sub_slot(slot_id: int, name: str, display: str, angle: float, provider: str,
+                 provider_type: str) -> None:
+        cxp, cyp = polar(SUB_R_POS, angle)
+        D = SUB_D
+        cxp, cyp = round(cxp - D / 2) + D / 2, round(cyp - D / 2) + D / 2  # slot x/y must be integers
+        x.open("ComplicationSlot", slotId=slot_id, name=name, displayName=display,
+               x=cxp - D / 2, y=cyp - D / 2, width=D, height=D,
+               supportedTypes="SHORT_TEXT RANGED_VALUE MONOCHROMATIC_IMAGE SMALL_IMAGE EMPTY",
+               isCustomizable="TRUE")
+        x.leaf("DefaultProviderPolicy", defaultSystemProvider=provider,
+               defaultSystemProviderType=provider_type)
+        x.leaf("BoundingOval", x=0, y=0, width=D, height=D)
+        x.leaf("Variant", mode="AMBIENT", target="alpha", value=0)
+
+        def disc() -> None:
+            x.open("PartDraw", name="disc", x=0, y=0, width=D, height=D)
+            x.open("Ellipse", x=1, y=1, width=D - 2, height=D - 2)
+            x.leaf("Stroke", color="#FF2A2D32", thickness=1.5)
+            x.leaf("Fill", color="#FF0D0E10")
+            x.close("Ellipse")
+            x.close("PartDraw")
+
+        def icon(px, py, size) -> None:
+            x.open("PartImage", name="icon", x=px, y=py, width=size, height=size, tintColor=ACCENT)
+            x.leaf("Image", resource="[COMPLICATION.MONOCHROMATIC_IMAGE]")
+            x.close("PartImage")
+
+        # SHORT_TEXT: icon on top, value below
+        x.open("Complication", type="SHORT_TEXT")
+        disc()
+        icon(D / 2 - 9, 9, 18)
+        text_part(x, "value", 4, 27, D - 8, 20, 14, WHITE,
+                  template=("%s", ["[COMPLICATION.TEXT]"]), weight="MEDIUM")
+        x.close("Complication")
+
+        # RANGED_VALUE: progress ring + value
+        x.open("Complication", type="RANGED_VALUE")
+        disc()
+        x.open("PartDraw", name="ring", x=0, y=0, width=D, height=D)
+        x.open("Arc", centerX=D / 2, centerY=D / 2, width=D - 8, height=D - 8,
+               startAngle=0, endAngle=360)
+        x.leaf("Stroke", color=TRACK, thickness=3, cap="ROUND")
+        x.close("Arc")
+        x.open("Arc", centerX=D / 2, centerY=D / 2, width=D - 8, height=D - 8,
+               startAngle=0, endAngle=0)
+        x.leaf("Stroke", color=ACCENT, thickness=3, cap="ROUND")
+        x.leaf("Transform", target="endAngle",
+               value="360 * clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN])"
+                     " / max([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN], 1), 0, 1)")
+        x.close("Arc")
+        x.close("PartDraw")
+        text_part(x, "value", 6, D / 2 - 10, D - 12, 20, 14, WHITE,
+                  template=("%s", ["[COMPLICATION.TEXT]"]), weight="MEDIUM")
+        x.close("Complication")
+
+        # MONOCHROMATIC_IMAGE: centred icon
+        x.open("Complication", type="MONOCHROMATIC_IMAGE")
+        disc()
+        icon(D / 2 - 13, D / 2 - 13, 26)
+        x.close("Complication")
+
+        # SMALL_IMAGE: centred image
+        x.open("Complication", type="SMALL_IMAGE")
+        disc()
+        x.open("PartImage", name="image", x=D / 2 - 15, y=D / 2 - 15, width=30, height=30)
+        x.leaf("Image", resource="[COMPLICATION.SMALL_IMAGE]")
+        x.close("PartImage")
+        x.close("Complication")
+
+        x.open("Complication", type="EMPTY")
+        x.close("Complication")
+        x.close("ComplicationSlot")
+
+    # Weather has no system provider in WFF v1, so the left slot starts empty and the
+    # user picks a weather complication (e.g. Google Weather) from the customise screen.
+    sub_slot(1, "upper_left", "@string/slot_left", 360 - SUB_ANGLE, "EMPTY", "EMPTY")
+    sub_slot(2, "upper_right", "@string/slot_right", SUB_ANGLE, "SUNRISE_SUNSET", "SHORT_TEXT")
+
     # ---- Unread notification dot ---------------------------------------------
     x.comment("Unread notification indicator: small accent dot at the bottom, only when unread > 0")
     x.open("Condition")
@@ -414,7 +499,8 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
     from PIL import Image, ImageDraw, ImageFont
 
     data = data or dict(weekday="SUN", day=22, batt=78, steps=6240, step_pct=62, hr=68,
-                        ev_time="14:00 - 15:00", ev_title="Design review", unread=3)
+                        ev_time="14:00 - 15:00", ev_title="Design review", unread=3,
+                        left=("sun", "18°"), right=("sunset", "16:32"))
     S = 4  # supersampling
     W = SIZE * S
     img = Image.new("RGBA", (W, W), (0, 0, 0, 255))
@@ -506,6 +592,33 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
     text(data["ev_time"], (cx + 18, cy + 7, cw - 36, 18), 13, col(acc, ca), "Medium")
     text(data["ev_title"], (cx + 18, cy + 24, cw - 36, 22), 16, col(WHITE, ca))
 
+    # small circular slots
+    if not ambient:
+        for ang, key in ((360 - SUB_ANGLE, "left"), (SUB_ANGLE, "right")):
+            cxp, cyp = polar(SUB_R_POS, ang)
+            cxp, cyp = round(cxp - SUB_D / 2) + SUB_D / 2, round(cyp - SUB_D / 2) + SUB_D / 2
+            R = SUB_D / 2
+            layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
+            ld = ImageDraw.Draw(layer)
+            ld.ellipse([P(cxp - R + 1), P(cyp - R + 1), P(cxp + R - 1), P(cyp + R - 1)],
+                       fill=col("#FF0D0E10"), outline=col("#FF2A2D32"), width=int(1.5 * S))
+            img.alpha_composite(layer)
+            d = ImageDraw.Draw(img)
+            kind, val = data.get(key, (None, ""))
+            ix, iy = cxp, cyp - R + 18
+            a = col(acc)
+            if kind == "sun":
+                d.ellipse([P(ix - 4.5), P(iy - 4.5), P(ix + 4.5), P(iy + 4.5)], fill=a)
+                for k in range(8):
+                    x1, y1 = ix + 6.5 * math.sin(k * math.pi / 4), iy - 6.5 * math.cos(k * math.pi / 4)
+                    x2, y2 = ix + 8.5 * math.sin(k * math.pi / 4), iy - 8.5 * math.cos(k * math.pi / 4)
+                    d.line([P(x1), P(y1), P(x2), P(y2)], fill=a, width=int(1.6 * S))
+            elif kind == "sunset":
+                d.pieslice([P(ix - 6), P(iy - 4), P(ix + 6), P(iy + 8)], 180, 360, fill=a)
+                d.line([P(ix - 9), P(iy + 2.5), P(ix + 9), P(iy + 2.5)], fill=a, width=int(1.6 * S))
+            if val:
+                text(val, (cxp - R + 4, cyp - R + 27, SUB_D - 8, 20), 14, col(WHITE), "Medium")
+
     # unread notification dot
     if data.get("unread", 0) > 0:
         na = 180 / 255 if ambient else 1
@@ -558,6 +671,8 @@ def build_strings() -> tuple[str, str]:
         "config_seconds": "Seconds hand",
         "config_gauges": "Battery / steps gauges",
         "slot_bottom": "Bottom (next event)",
+        "slot_left": "Upper left (weather)",
+        "slot_right": "Upper right (sunrise / sunset)",
     }
     ja = {
         "app_name": "Meridian",
@@ -565,6 +680,8 @@ def build_strings() -> tuple[str, str]:
         "config_seconds": "秒針",
         "config_gauges": "バッテリー / 歩数ゲージ",
         "slot_bottom": "下部（次の予定）",
+        "slot_left": "左上（天気）",
+        "slot_right": "右上（日の出・日の入り）",
     }
     for tid, _, _, en_name, ja_name in THEMES:
         en[f"theme_{tid}"] = en_name
