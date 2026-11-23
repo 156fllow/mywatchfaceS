@@ -43,9 +43,6 @@ STEP_END, STEP_SPAN = 125, 70      # right side, upward from bottom-right
 SUB_D = 56                       # diameter
 SUB_R_POS, SUB_ANGLE = 128, 35   # placed at 360-35 deg (left) and 35 deg (right)
 
-# Unread-notification dot (bottom, between the event pill and the 6 o'clock index)
-NOTIF_Y, NOTIF_R = 388, 4
-
 # Hands (length from center / tail length / width)
 HOUR_LEN, HOUR_TAIL, HOUR_W = 118, 16, 11
 MIN_LEN, MIN_TAIL, MIN_W = 182, 16, 8
@@ -450,22 +447,6 @@ def build_xml() -> str:
     sub_slot(1, "upper_left", "@string/slot_left", 360 - SUB_ANGLE, "EMPTY", "EMPTY")
     sub_slot(2, "upper_right", "@string/slot_right", SUB_ANGLE, "SUNRISE_SUNSET", "SHORT_TEXT")
 
-    # ---- Unread notification dot ---------------------------------------------
-    x.comment("Unread notification indicator: small accent dot at the bottom, only when unread > 0")
-    x.open("Condition")
-    x.open("Expressions")
-    x.raw('<Expression name="unread">[UNREAD_NOTIFICATION_COUNT] &gt; 0</Expression>')
-    x.close("Expressions")
-    x.open("Compare", expression="unread")
-    x.open("PartDraw", name="notification_dot", x=C - 10, y=NOTIF_Y - 10, width=20, height=20)
-    x.leaf("Variant", mode="AMBIENT", target="alpha", value=180)
-    x.open("Ellipse", x=10 - NOTIF_R, y=10 - NOTIF_R, width=NOTIF_R * 2, height=NOTIF_R * 2)
-    x.leaf("Fill", color=ACCENT)
-    x.close("Ellipse")
-    x.close("PartDraw")
-    x.close("Compare")
-    x.close("Condition")
-
     # ---- Hands ----------------------------------------------------------------
     x.comment("Hands")
     hand(x, "hour_hand", "[HOUR_0_11_MINUTE] * 30", HOUR_LEN, HOUR_TAIL, HOUR_W, WHITE, True)
@@ -506,7 +487,7 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
     from PIL import Image, ImageDraw, ImageFont
 
     data = data or dict(weekday="SUN", day=22, batt=78, steps=6240, step_pct=62, hr=68,
-                        ev_time="14:00 - 15:00", ev_title="Design review", unread=3,
+                        ev_time="14:00 - 15:00", ev_title="Design review",
                         left=("sun", "18°"), right=("sunset", "16:32"))
     S = 4  # supersampling
     W = SIZE * S
@@ -625,12 +606,6 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
                 d.line([P(ix - 9), P(iy + 2.5), P(ix + 9), P(iy + 2.5)], fill=a, width=int(1.6 * S))
             if val:
                 text(val, (cxp - R + 3, cyp - R + 27, SUB_D - 6, 20), 16, col(WHITE), "Medium")
-
-    # unread notification dot
-    if data.get("unread", 0) > 0:
-        na = 180 / 255 if ambient else 1
-        d.ellipse([P(C - NOTIF_R), P(NOTIF_Y - NOTIF_R), P(C + NOTIF_R), P(NOTIF_Y + NOTIF_R)],
-                  fill=col(acc, na))
 
     # hands
     hh, mm, ss = time

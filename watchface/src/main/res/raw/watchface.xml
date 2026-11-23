@@ -507,20 +507,6 @@
             <Complication type="EMPTY">
             </Complication>
         </ComplicationSlot>
-        <!-- Unread notification indicator: small accent dot at the bottom, only when unread > 0 -->
-        <Condition>
-            <Expressions>
-                <Expression name="unread">[UNREAD_NOTIFICATION_COUNT] &gt; 0</Expression>
-            </Expressions>
-            <Compare expression="unread">
-                <PartDraw name="notification_dot" x="215" y="378" width="20" height="20">
-                    <Variant mode="AMBIENT" target="alpha" value="180" />
-                    <Ellipse x="6" y="6" width="8" height="8">
-                        <Fill color="[CONFIGURATION.theme.0]" />
-                    </Ellipse>
-                </PartDraw>
-            </Compare>
-        </Condition>
         <!-- Hands -->
         <PartDraw name="hour_hand" x="0" y="0" width="450" height="450" pivotX="0.5" pivotY="0.5">
             <Transform target="angle" value="[HOUR_0_11_MINUTE] * 30" />
