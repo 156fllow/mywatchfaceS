@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meridian</string>
+    <string name="config_theme">Theme</string>
+    <string name="config_seconds">Seconds hand</string>
+    <string name="config_gauges">Battery / steps gauges</string>
+    <string name="slot_bottom">Bottom (next event)</string>
+    <string name="slot_left">Upper left (weather)</string>
+    <string name="slot_right">Upper right (sunrise / sunset)</string>
+    <string name="theme_champagne">Champagne</string>
+    <string name="theme_glacier">Glacier</string>
+    <string name="theme_sage">Sage</string>
+    <string name="theme_coral">Coral</string>
+    <string name="theme_lavender">Lavender</string>
+    <string name="theme_graphite">Graphite</string>
+</resources>
