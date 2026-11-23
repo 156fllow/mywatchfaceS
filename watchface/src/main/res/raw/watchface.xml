@@ -288,13 +288,13 @@
             </Condition>
             <PartText name="battery_value" x="50" y="195" width="120" height="56">
                 <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                    <Font family="SYNC_TO_DEVICE" size="32" weight="NORMAL" color="#FFF2F2F0"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></Font>
+                    <Font family="SYNC_TO_DEVICE" size="32" weight="MEDIUM" color="#FFF2F2F0"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></Font>
                 </Text>
             </PartText>
             <!-- Steps (right) -->
             <PartText name="steps_value" x="280" y="195" width="120" height="56">
                 <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                    <Font family="SYNC_TO_DEVICE" size="32" weight="NORMAL" color="#FFF2F2F0"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></Font>
+                    <Font family="SYNC_TO_DEVICE" size="32" weight="MEDIUM" color="#FFF2F2F0"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></Font>
                 </Text>
             </PartText>
             <PartText name="steps_label" x="280" y="241" width="120" height="24">
@@ -308,64 +308,64 @@
                     <Expression name="hr">[HEART_RATE] &gt; 0</Expression>
                 </Expressions>
                 <Compare expression="hr">
-                    <PartText name="hr_value" x="165" y="246" width="120" height="49">
+                    <PartText name="hr_value" x="165" y="242" width="120" height="49">
                         <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                            <Font family="SYNC_TO_DEVICE" size="28" weight="NORMAL" color="#FFF2F2F0"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></Font>
+                            <Font family="SYNC_TO_DEVICE" size="28" weight="MEDIUM" color="#FFF2F2F0"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></Font>
                         </Text>
                     </PartText>
                 </Compare>
                 <Default>
-                    <PartText name="hr_value_none" x="165" y="246" width="120" height="49">
+                    <PartText name="hr_value_none" x="165" y="242" width="120" height="49">
                         <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                            <Font family="SYNC_TO_DEVICE" size="28" weight="NORMAL" color="#FF3C4046">--</Font>
+                            <Font family="SYNC_TO_DEVICE" size="28" weight="MEDIUM" color="#FF3C4046">--</Font>
                         </Text>
                     </PartText>
                 </Default>
             </Condition>
-            <PartText name="hr_label" x="165" y="283" width="120" height="23">
+            <PartText name="hr_label" x="165" y="279" width="120" height="23">
                 <Text align="CENTER" ellipsis="TRUE" maxLines="1">
                     <Font family="SYNC_TO_DEVICE" size="13" weight="MEDIUM" color="[CONFIGURATION.theme.0]">BPM</Font>
                 </Text>
             </PartText>
         </Group>
         <!-- Bottom: next calendar event (user can pick any SHORT_TEXT / LONG_TEXT provider) -->
-        <ComplicationSlot slotId="0" name="next_event" displayName="@string/slot_bottom" x="105" y="314" width="240" height="58" supportedTypes="LONG_TEXT SHORT_TEXT EMPTY" isCustomizable="TRUE">
+        <ComplicationSlot slotId="0" name="next_event" displayName="@string/slot_bottom" x="99" y="299" width="252" height="86" supportedTypes="LONG_TEXT SHORT_TEXT EMPTY" isCustomizable="TRUE">
             <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="LONG_TEXT" />
-            <BoundingRoundBox x="0" y="0" width="240" height="58" cornerRadius="29" />
+            <BoundingRoundBox x="0" y="0" width="252" height="86" cornerRadius="24" />
             <Variant mode="AMBIENT" target="alpha" value="170" />
             <Complication type="LONG_TEXT">
-                <PartDraw name="pill" x="0" y="0" width="240" height="58">
-                    <RoundRectangle x="1" y="1" width="238" height="56" cornerRadiusX="28" cornerRadiusY="28">
+                <PartDraw name="pill" x="0" y="0" width="252" height="86">
+                    <RoundRectangle x="1" y="1" width="250" height="84" cornerRadiusX="24" cornerRadiusY="24">
                         <Stroke color="#FF2A2D32" thickness="1.5" />
                         <Fill color="#FF0D0E10" />
                     </RoundRectangle>
                 </PartDraw>
-                <PartText name="event_time" x="18" y="4" width="204" height="26">
+                <PartText name="event_time" x="16" y="2" width="220" height="32">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="15" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+                        <Font family="SYNC_TO_DEVICE" size="18" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
                     </Text>
                 </PartText>
-                <PartText name="event_title" x="18" y="23" width="204" height="32">
-                    <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="18" weight="NORMAL" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+                <PartText name="event_title" x="16" y="30" width="220" height="52">
+                    <Text align="CENTER" ellipsis="TRUE" maxLines="2">
+                        <Font family="SYNC_TO_DEVICE" size="22" weight="MEDIUM" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
                 </PartText>
             </Complication>
             <Complication type="SHORT_TEXT">
-                <PartDraw name="pill" x="0" y="0" width="240" height="58">
-                    <RoundRectangle x="1" y="1" width="238" height="56" cornerRadiusX="28" cornerRadiusY="28">
+                <PartDraw name="pill" x="0" y="0" width="252" height="86">
+                    <RoundRectangle x="1" y="1" width="250" height="84" cornerRadiusX="24" cornerRadiusY="24">
                         <Stroke color="#FF2A2D32" thickness="1.5" />
                         <Fill color="#FF0D0E10" />
                     </RoundRectangle>
                 </PartDraw>
-                <PartText name="short_title" x="18" y="4" width="204" height="26">
+                <PartText name="short_title" x="16" y="2" width="220" height="32">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="15" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
+                        <Font family="SYNC_TO_DEVICE" size="18" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
                     </Text>
                 </PartText>
-                <PartText name="short_text" x="18" y="23" width="204" height="32">
-                    <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="18" weight="NORMAL" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
+                <PartText name="short_text" x="16" y="30" width="220" height="52">
+                    <Text align="CENTER" ellipsis="TRUE" maxLines="2">
+                        <Font family="SYNC_TO_DEVICE" size="22" weight="MEDIUM" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
                 </PartText>
             </Complication>

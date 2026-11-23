@@ -39,6 +39,10 @@ ARC_THICK = 5
 BATT_START, BATT_SPAN = 235, 70    # left side, upward from bottom-left
 STEP_END, STEP_SPAN = 125, 70      # right side, upward from bottom-right
 
+# Bottom "next event" pill: time line + up to two lines of event title
+EV_W, EV_H, EV_Y, EV_RADIUS = 252, 86, 299, 24
+EV_TIME_SIZE, EV_TITLE_SIZE = 18, 22
+
 # Small circular complication slots (upper left / upper right of the date)
 SUB_D = 56                       # diameter
 SUB_R_POS, SUB_ANGLE = 128, 35   # placed at 360-35 deg (left) and 35 deg (right)
@@ -130,7 +134,8 @@ def full_draw(x: X, name: str) -> None:
 
 def text_part(x: X, name: str, px, py, w, h, size, color, content: str | None = None,
               template: tuple[str, list[str]] | None = None, weight="NORMAL",
-              align="CENTER", upper=False, ambient_alpha: int | None = None) -> None:
+              align="CENTER", upper=False, ambient_alpha: int | None = None,
+              max_lines: int = 1) -> None:
     # Device fonts (Google Sans / Japanese fonts) have a much taller line height than the
     # font size. If the box is shorter than one line the text is ellipsised or not drawn at
     # all, so grow every box vertically around its centre to at least TEXT_LINE x size.
@@ -142,7 +147,7 @@ def text_part(x: X, name: str, px, py, w, h, size, color, content: str | None = 
     x.open("PartText", name=name, x=px, y=py, width=w, height=h)
     if ambient_alpha is not None:
         x.leaf("Variant", mode="AMBIENT", target="alpha", value=ambient_alpha)
-    x.open("Text", align=align, ellipsis="TRUE", maxLines=1)
+    x.open("Text", align=align, ellipsis="TRUE", maxLines=max_lines)
     # IMPORTANT: Font is mixed content, so any whitespace/newlines around the text are
     # rendered on the device (they pushed text off-centre, ellipsised it, or blanked it).
     # Emit the whole Font element on a single line with no surrounding whitespace.
@@ -304,11 +309,11 @@ def build_xml() -> str:
     x.close("Default")
     x.close("Condition")
     text_part(x, "battery_value", 50, 204, 120, 38, 32, WHITE,
-              template=("%d%%", ["[BATTERY_PERCENT]"]), weight="NORMAL")
+              template=("%d%%", ["[BATTERY_PERCENT]"]), weight="MEDIUM")
 
     x.comment("Steps (right)")
     text_part(x, "steps_value", 280, 204, 120, 38, 32, WHITE,
-              template=("%d", ["[STEP_COUNT]"]), weight="NORMAL")
+              template=("%d", ["[STEP_COUNT]"]), weight="MEDIUM")
     text_part(x, "steps_label", 280, 244, 120, 18, 14, GREY, content="STEPS", weight="MEDIUM")
 
     x.comment("Heart rate (lower centre); shows a dash placeholder until a reading is available")
@@ -317,32 +322,32 @@ def build_xml() -> str:
     x.raw('<Expression name="hr">[HEART_RATE] &gt; 0</Expression>')
     x.close("Expressions")
     x.open("Compare", expression="hr")
-    text_part(x, "hr_value", 165, 254, 120, 32, 28, WHITE,
-              template=("%d", ["[HEART_RATE]"]), weight="NORMAL")
+    text_part(x, "hr_value", 165, 250, 120, 32, 28, WHITE,
+              template=("%d", ["[HEART_RATE]"]), weight="MEDIUM")
     x.close("Compare")
     x.open("Default")
-    text_part(x, "hr_value_none", 165, 254, 120, 32, 28, DIM, content="--", weight="NORMAL")
+    text_part(x, "hr_value_none", 165, 250, 120, 32, 28, DIM, content="--", weight="MEDIUM")
     x.close("Default")
     x.close("Condition")
-    text_part(x, "hr_label", 165, 286, 120, 16, 13, ACCENT, content="BPM", weight="MEDIUM")
+    text_part(x, "hr_label", 165, 282, 120, 16, 13, ACCENT, content="BPM", weight="MEDIUM")
     x.close("Group")
 
     # ---- Next event complication -------------------------------------------
     x.comment("Bottom: next calendar event (user can pick any SHORT_TEXT / LONG_TEXT provider)")
-    cw, ch = 240, 58
-    cx, cy = C - cw / 2, 314
+    cw, ch = EV_W, EV_H
+    cx, cy = C - cw / 2, EV_Y
     x.open("ComplicationSlot", slotId=0, name="next_event", displayName="@string/slot_bottom",
            x=cx, y=cy, width=cw, height=ch, supportedTypes="LONG_TEXT SHORT_TEXT EMPTY",
            isCustomizable="TRUE")
     x.leaf("DefaultProviderPolicy", defaultSystemProvider="NEXT_EVENT",
            defaultSystemProviderType="LONG_TEXT")
-    x.leaf("BoundingRoundBox", x=0, y=0, width=cw, height=ch, cornerRadius=ch / 2)
+    x.leaf("BoundingRoundBox", x=0, y=0, width=cw, height=ch, cornerRadius=EV_RADIUS)
     x.leaf("Variant", mode="AMBIENT", target="alpha", value=170)
 
     def pill() -> None:
         x.open("PartDraw", name="pill", x=0, y=0, width=cw, height=ch)
         x.open("RoundRectangle", x=1, y=1, width=cw - 2, height=ch - 2,
-               cornerRadiusX=(ch - 2) / 2, cornerRadiusY=(ch - 2) / 2)
+               cornerRadiusX=EV_RADIUS, cornerRadiusY=EV_RADIUS)
         x.leaf("Stroke", color="#FF2A2D32", thickness=1.5)
         x.leaf("Fill", color="#FF0D0E10")
         x.close("RoundRectangle")
@@ -350,16 +355,18 @@ def build_xml() -> str:
 
     x.open("Complication", type="LONG_TEXT")
     pill()
-    text_part(x, "event_time", 18, 7, cw - 36, 20, 15, ACCENT, template=("%s", ["[COMPLICATION.TITLE]"]),
-              weight="MEDIUM")
-    text_part(x, "event_title", 18, 27, cw - 36, 24, 18, WHITE, template=("%s", ["[COMPLICATION.TEXT]"]))
+    text_part(x, "event_time", 16, 6, cw - 32, 24, EV_TIME_SIZE, ACCENT,
+              template=("%s", ["[COMPLICATION.TITLE]"]), weight="MEDIUM")
+    text_part(x, "event_title", 16, 30, cw - 32, ch - 34, EV_TITLE_SIZE, WHITE,
+              template=("%s", ["[COMPLICATION.TEXT]"]), weight="MEDIUM", max_lines=2)
     x.close("Complication")
 
     x.open("Complication", type="SHORT_TEXT")
     pill()
-    text_part(x, "short_title", 18, 7, cw - 36, 20, 15, ACCENT, template=("%s", ["[COMPLICATION.TITLE]"]),
-              weight="MEDIUM")
-    text_part(x, "short_text", 18, 27, cw - 36, 24, 18, WHITE, template=("%s", ["[COMPLICATION.TEXT]"]))
+    text_part(x, "short_title", 16, 6, cw - 32, 24, EV_TIME_SIZE, ACCENT,
+              template=("%s", ["[COMPLICATION.TITLE]"]), weight="MEDIUM")
+    text_part(x, "short_text", 16, 30, cw - 32, ch - 34, EV_TITLE_SIZE, WHITE,
+              template=("%s", ["[COMPLICATION.TEXT]"]), weight="MEDIUM", max_lines=2)
     x.close("Complication")
 
     x.open("Complication", type="EMPTY")
@@ -487,7 +494,7 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
     from PIL import Image, ImageDraw, ImageFont
 
     data = data or dict(weekday="SUN", day=22, batt=78, steps=6240, step_pct=62, hr=68,
-                        ev_time="14:00 - 15:00", ev_title="Design review",
+                        ev_time="In 46 min", ev_title="Design review with the watch face team",
                         left=("sun", "18°"), right=("sunset", "16:32"))
     S = 4  # supersampling
     W = SIZE * S
@@ -556,29 +563,43 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
              col(LOW if data["batt"] <= 15 else acc))
         arcp(STEP_END - STEP_SPAN * min(data["step_pct"], 100) / 100, STEP_END, col(acc))
 
-        text(f'{data["batt"]}%', (50, 204, 120, 38), 32, col(WHITE))
+        text(f'{data["batt"]}%', (50, 204, 120, 38), 32, col(WHITE), "Medium")
         text("BATTERY", (50, 244, 120, 18), 14, col(GREY), "Medium")
-        text(str(data["steps"]), (280, 204, 120, 38), 32, col(WHITE))
+        text(str(data["steps"]), (280, 204, 120, 38), 32, col(WHITE), "Medium")
         text("STEPS", (280, 244, 120, 18), 14, col(GREY), "Medium")
-        text(str(data["hr"]), (165, 254, 120, 32), 28, col(WHITE))
-        text("BPM", (165, 286, 120, 16), 13, col(acc), "Medium")
+        text(str(data["hr"]), (165, 250, 120, 32), 28, col(WHITE), "Medium")
+        text("BPM", (165, 282, 120, 16), 13, col(acc), "Medium")
 
     da = 200 / 255 if ambient else 1
     text(data["weekday"], (145, 72, 160, 24), 18, col(acc, da), "Medium")
     text(str(data["day"]), (145, 94, 160, 46), 42, col(WHITE, da), "Light")
 
     # complication
-    cw, ch = 240, 58
-    cx, cy = C - cw / 2, 314
+    cw, ch = EV_W, EV_H
+    cx, cy = C - cw / 2, EV_Y
     ca = 170 / 255 if ambient else 1
     layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
     ld = ImageDraw.Draw(layer)
-    ld.rounded_rectangle([P(cx + 1), P(cy + 1), P(cx + cw - 1), P(cy + ch - 1)], radius=P((ch - 2) / 2),
+    ld.rounded_rectangle([P(cx + 1), P(cy + 1), P(cx + cw - 1), P(cy + ch - 1)], radius=P(EV_RADIUS),
                          fill=col("#FF0D0E10", ca), outline=col("#FF2A2D32", ca), width=int(1.5 * S))
     img.alpha_composite(layer)
     d = ImageDraw.Draw(img)
-    text(data["ev_time"], (cx + 18, cy + 7, cw - 36, 20), 15, col(acc, ca), "Medium")
-    text(data["ev_title"], (cx + 18, cy + 27, cw - 36, 24), 18, col(WHITE, ca))
+    text(data["ev_time"], (cx + 16, cy + 6, cw - 32, 24), EV_TIME_SIZE, col(acc, ca), "Medium")
+    fnt = font(EV_TITLE_SIZE, "Medium")
+    words, lines, cur = data["ev_title"].split(), [], ""
+    for w_ in words:
+        trial = (cur + " " + w_).strip()
+        if d.textlength(trial, font=fnt) > P(cw - 32) and cur:
+            lines.append(cur)
+            cur = w_
+        else:
+            cur = trial
+    lines.append(cur)
+    lines = lines[:2]
+    lh = EV_TITLE_SIZE * 1.3
+    top = cy + 30 + (ch - 34 - lh * len(lines)) / 2
+    for i, ln in enumerate(lines):
+        text(ln, (cx + 16, top + i * lh, cw - 32, lh), EV_TITLE_SIZE, col(WHITE, ca), "Medium")
 
     # small circular slots
     if not ambient:
