@@ -255,25 +255,13 @@
         <PartText name="weekday" x="145" y="72" width="160" height="26">
             <Variant mode="AMBIENT" target="alpha" value="200" />
             <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                <Font family="SYNC_TO_DEVICE" size="15" weight="MEDIUM" color="[CONFIGURATION.theme.0]">
-                    <Upper>
-                        <Template>
-                            %s
-                            <Parameter expression="[DAY_OF_WEEK_S]" />
-                        </Template>
-                    </Upper>
-                </Font>
+                <Font family="SYNC_TO_DEVICE" size="15" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></Font>
             </Text>
         </PartText>
         <PartText name="day" x="145" y="84" width="160" height="63">
             <Variant mode="AMBIENT" target="alpha" value="200" />
             <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                <Font family="SYNC_TO_DEVICE" size="36" weight="LIGHT" color="#FFF2F2F0">
-                    <Template>
-                        %d
-                        <Parameter expression="[DAY]" />
-                    </Template>
-                </Font>
+                <Font family="SYNC_TO_DEVICE" size="36" weight="LIGHT" color="#FFF2F2F0"><Template>%d<Parameter expression="[DAY]" /></Template></Font>
             </Text>
         </PartText>
         <Group name="health" x="0" y="0" width="450" height="450" alpha="255">
@@ -286,48 +274,32 @@
                 <Compare expression="charging">
                     <PartText name="battery_label_chg" x="58" y="240" width="104" height="21">
                         <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                            <Font family="SYNC_TO_DEVICE" size="12" weight="MEDIUM" color="[CONFIGURATION.theme.0]">
-                                CHARGING
-                            </Font>
+                            <Font family="SYNC_TO_DEVICE" size="12" weight="MEDIUM" color="[CONFIGURATION.theme.0]">CHARGING</Font>
                         </Text>
                     </PartText>
                 </Compare>
                 <Default>
                     <PartText name="battery_label" x="58" y="240" width="104" height="21">
                         <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                            <Font family="SYNC_TO_DEVICE" size="12" weight="MEDIUM" color="#FF8C9096">
-                                BATTERY
-                            </Font>
+                            <Font family="SYNC_TO_DEVICE" size="12" weight="MEDIUM" color="#FF8C9096">BATTERY</Font>
                         </Text>
                     </PartText>
                 </Default>
             </Condition>
             <PartText name="battery_value" x="58" y="200" width="104" height="47">
                 <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                    <Font family="SYNC_TO_DEVICE" size="27" weight="NORMAL" color="#FFF2F2F0">
-                        <Template>
-                            %d%%
-                            <Parameter expression="[BATTERY_PERCENT]" />
-                        </Template>
-                    </Font>
+                    <Font family="SYNC_TO_DEVICE" size="27" weight="NORMAL" color="#FFF2F2F0"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></Font>
                 </Text>
             </PartText>
             <!-- Steps (right) -->
             <PartText name="steps_value" x="288" y="200" width="104" height="47">
                 <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                    <Font family="SYNC_TO_DEVICE" size="27" weight="NORMAL" color="#FFF2F2F0">
-                        <Template>
-                            %d
-                            <Parameter expression="[STEP_COUNT]" />
-                        </Template>
-                    </Font>
+                    <Font family="SYNC_TO_DEVICE" size="27" weight="NORMAL" color="#FFF2F2F0"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></Font>
                 </Text>
             </PartText>
             <PartText name="steps_label" x="288" y="240" width="104" height="21">
                 <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                    <Font family="SYNC_TO_DEVICE" size="12" weight="MEDIUM" color="#FF8C9096">
-                        STEPS
-                    </Font>
+                    <Font family="SYNC_TO_DEVICE" size="12" weight="MEDIUM" color="#FF8C9096">STEPS</Font>
                 </Text>
             </PartText>
             <!-- Heart rate (lower centre); shows a dash placeholder until a reading is available -->
@@ -338,30 +310,21 @@
                 <Compare expression="hr">
                     <PartText name="hr_value" x="165" y="249" width="120" height="42">
                         <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                            <Font family="SYNC_TO_DEVICE" size="24" weight="NORMAL" color="#FFF2F2F0">
-                                <Template>
-                                    %d
-                                    <Parameter expression="[HEART_RATE]" />
-                                </Template>
-                            </Font>
+                            <Font family="SYNC_TO_DEVICE" size="24" weight="NORMAL" color="#FFF2F2F0"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></Font>
                         </Text>
                     </PartText>
                 </Compare>
                 <Default>
                     <PartText name="hr_value_none" x="165" y="249" width="120" height="42">
                         <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                            <Font family="SYNC_TO_DEVICE" size="24" weight="NORMAL" color="#FF3C4046">
-                                --
-                            </Font>
+                            <Font family="SYNC_TO_DEVICE" size="24" weight="NORMAL" color="#FF3C4046">--</Font>
                         </Text>
                     </PartText>
                 </Default>
             </Condition>
             <PartText name="hr_label" x="165" y="282" width="120" height="19">
                 <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                    <Font family="SYNC_TO_DEVICE" size="11" weight="MEDIUM" color="[CONFIGURATION.theme.0]">
-                        BPM
-                    </Font>
+                    <Font family="SYNC_TO_DEVICE" size="11" weight="MEDIUM" color="[CONFIGURATION.theme.0]">BPM</Font>
                 </Text>
             </PartText>
         </Group>
@@ -379,22 +342,12 @@
                 </PartDraw>
                 <PartText name="event_time" x="18" y="5" width="200" height="23">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="13" weight="MEDIUM" color="[CONFIGURATION.theme.0]">
-                            <Template>
-                                %s
-                                <Parameter expression="[COMPLICATION.TITLE]" />
-                            </Template>
-                        </Font>
+                        <Font family="SYNC_TO_DEVICE" size="13" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
                     </Text>
                 </PartText>
                 <PartText name="event_title" x="18" y="21" width="200" height="28">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="16" weight="NORMAL" color="#FFF2F2F0">
-                            <Template>
-                                %s
-                                <Parameter expression="[COMPLICATION.TEXT]" />
-                            </Template>
-                        </Font>
+                        <Font family="SYNC_TO_DEVICE" size="16" weight="NORMAL" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
                 </PartText>
             </Complication>
@@ -407,22 +360,12 @@
                 </PartDraw>
                 <PartText name="short_title" x="18" y="5" width="200" height="23">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="13" weight="MEDIUM" color="[CONFIGURATION.theme.0]">
-                            <Template>
-                                %s
-                                <Parameter expression="[COMPLICATION.TITLE]" />
-                            </Template>
-                        </Font>
+                        <Font family="SYNC_TO_DEVICE" size="13" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
                     </Text>
                 </PartText>
                 <PartText name="short_text" x="18" y="21" width="200" height="28">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="16" weight="NORMAL" color="#FFF2F2F0">
-                            <Template>
-                                %s
-                                <Parameter expression="[COMPLICATION.TEXT]" />
-                            </Template>
-                        </Font>
+                        <Font family="SYNC_TO_DEVICE" size="16" weight="NORMAL" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
                 </PartText>
             </Complication>
@@ -446,12 +389,7 @@
                 </PartImage>
                 <PartText name="value" x="4" y="25" width="48" height="24">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="14" weight="MEDIUM" color="#FFF2F2F0">
-                            <Template>
-                                %s
-                                <Parameter expression="[COMPLICATION.TEXT]" />
-                            </Template>
-                        </Font>
+                        <Font family="SYNC_TO_DEVICE" size="14" weight="MEDIUM" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
                 </PartText>
             </Complication>
@@ -473,12 +411,7 @@
                 </PartDraw>
                 <PartText name="value" x="6" y="16" width="44" height="24">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="14" weight="MEDIUM" color="#FFF2F2F0">
-                            <Template>
-                                %s
-                                <Parameter expression="[COMPLICATION.TEXT]" />
-                            </Template>
-                        </Font>
+                        <Font family="SYNC_TO_DEVICE" size="14" weight="MEDIUM" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
                 </PartText>
             </Complication>
@@ -523,12 +456,7 @@
                 </PartImage>
                 <PartText name="value" x="4" y="25" width="48" height="24">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="14" weight="MEDIUM" color="#FFF2F2F0">
-                            <Template>
-                                %s
-                                <Parameter expression="[COMPLICATION.TEXT]" />
-                            </Template>
-                        </Font>
+                        <Font family="SYNC_TO_DEVICE" size="14" weight="MEDIUM" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
                 </PartText>
             </Complication>
@@ -550,12 +478,7 @@
                 </PartDraw>
                 <PartText name="value" x="6" y="16" width="44" height="24">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
-                        <Font family="SYNC_TO_DEVICE" size="14" weight="MEDIUM" color="#FFF2F2F0">
-                            <Template>
-                                %s
-                                <Parameter expression="[COMPLICATION.TEXT]" />
-                            </Template>
-                        </Font>
+                        <Font family="SYNC_TO_DEVICE" size="14" weight="MEDIUM" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
                 </PartText>
             </Complication>

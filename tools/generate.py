@@ -146,21 +146,19 @@ def text_part(x: X, name: str, px, py, w, h, size, color, content: str | None = 
     if ambient_alpha is not None:
         x.leaf("Variant", mode="AMBIENT", target="alpha", value=ambient_alpha)
     x.open("Text", align=align, ellipsis="TRUE", maxLines=1)
-    x.open("Font", family=FONT, size=size, weight=weight, color=color)
-    if upper:
-        x.open("Upper")
+    # IMPORTANT: Font is mixed content, so any whitespace/newlines around the text are
+    # rendered on the device (they pushed text off-centre, ellipsised it, or blanked it).
+    # Emit the whole Font element on a single line with no surrounding whitespace.
     if template:
         fmt, params = template
-        x.open("Template")
-        x.raw(escape(fmt))
-        for p in params:
-            x.leaf("Parameter", expression=p)
-        x.close("Template")
-    elif content is not None:
-        x.raw(escape(content))
+        inner = "<Template>" + escape(fmt) + "".join(
+            f'<Parameter expression="{escape(p_, {chr(34): "&quot;"})}" />' for p_ in params
+        ) + "</Template>"
+    else:
+        inner = escape(content or "")
     if upper:
-        x.close("Upper")
-    x.close("Font")
+        inner = f"<Upper>{inner}</Upper>"
+    x.raw(f"<Font{x._a(dict(family=FONT, size=size, weight=weight, color=color))}>{inner}</Font>")
     x.close("Text")
     x.close("PartText")
 
@@ -709,7 +707,12 @@ def main() -> None:
     args = ap.parse_args()
 
     (RES / "raw").mkdir(parents=True, exist_ok=True)
-    (RES / "raw" / "watchface.xml").write_text(build_xml(), encoding="utf-8")
+    xml = build_xml()
+    # Guard: whitespace inside <Font> is rendered on the device and breaks text layout.
+    import re
+    if re.search(r"<Font[^>]*>\s|\s</Font>", xml):
+        raise SystemExit("error: whitespace inside <Font> element (it is rendered on the watch)")
+    (RES / "raw" / "watchface.xml").write_text(xml, encoding="utf-8")
     en, ja = build_strings()
     (RES / "values").mkdir(parents=True, exist_ok=True)
     (RES / "values-ja").mkdir(parents=True, exist_ok=True)
