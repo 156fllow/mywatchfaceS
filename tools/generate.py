@@ -286,9 +286,9 @@ def build_xml() -> str:
 
     # ---- Info -----------------------------------------------------------------
     x.comment("Date (top)")
-    text_part(x, "weekday", 145, 74, 160, 22, 15, ACCENT, template=("%s", ["[DAY_OF_WEEK_S]"]),
+    text_part(x, "weekday", 145, 72, 160, 24, 18, ACCENT, template=("%s", ["[DAY_OF_WEEK_S]"]),
               weight="MEDIUM", upper=True, ambient_alpha=200)
-    text_part(x, "day", 145, 94, 160, 44, 36, WHITE, template=("%d", ["[DAY]"]),
+    text_part(x, "day", 145, 94, 160, 46, 42, WHITE, template=("%d", ["[DAY]"]),
               weight="LIGHT", ambient_alpha=200)
 
     x.open("Group", name="health", x=0, y=0, width=SIZE, height=SIZE, alpha=255)
@@ -300,19 +300,19 @@ def build_xml() -> str:
     x.raw('<Expression name="charging">[BATTERY_CHARGING_STATUS]</Expression>')
     x.close("Expressions")
     x.open("Compare", expression="charging")
-    text_part(x, "battery_label_chg", 58, 242, 104, 18, 12, ACCENT, content="CHARGING", weight="MEDIUM")
+    text_part(x, "battery_label_chg", 50, 244, 120, 18, 14, ACCENT, content="CHARGING", weight="MEDIUM")
     x.close("Compare")
     x.open("Default")
-    text_part(x, "battery_label", 58, 242, 104, 18, 12, GREY, content="BATTERY", weight="MEDIUM")
+    text_part(x, "battery_label", 50, 244, 120, 18, 14, GREY, content="BATTERY", weight="MEDIUM")
     x.close("Default")
     x.close("Condition")
-    text_part(x, "battery_value", 58, 206, 104, 36, 27, WHITE,
+    text_part(x, "battery_value", 50, 204, 120, 38, 32, WHITE,
               template=("%d%%", ["[BATTERY_PERCENT]"]), weight="NORMAL")
 
     x.comment("Steps (right)")
-    text_part(x, "steps_value", 288, 206, 104, 36, 27, WHITE,
+    text_part(x, "steps_value", 280, 204, 120, 38, 32, WHITE,
               template=("%d", ["[STEP_COUNT]"]), weight="NORMAL")
-    text_part(x, "steps_label", 288, 242, 104, 18, 12, GREY, content="STEPS", weight="MEDIUM")
+    text_part(x, "steps_label", 280, 244, 120, 18, 14, GREY, content="STEPS", weight="MEDIUM")
 
     x.comment("Heart rate (lower centre); shows a dash placeholder until a reading is available")
     x.open("Condition")
@@ -320,19 +320,19 @@ def build_xml() -> str:
     x.raw('<Expression name="hr">[HEART_RATE] &gt; 0</Expression>')
     x.close("Expressions")
     x.open("Compare", expression="hr")
-    text_part(x, "hr_value", 165, 254, 120, 32, 24, WHITE,
+    text_part(x, "hr_value", 165, 254, 120, 32, 28, WHITE,
               template=("%d", ["[HEART_RATE]"]), weight="NORMAL")
     x.close("Compare")
     x.open("Default")
-    text_part(x, "hr_value_none", 165, 254, 120, 32, 24, DIM, content="--", weight="NORMAL")
+    text_part(x, "hr_value_none", 165, 254, 120, 32, 28, DIM, content="--", weight="NORMAL")
     x.close("Default")
     x.close("Condition")
-    text_part(x, "hr_label", 165, 284, 120, 16, 11, ACCENT, content="BPM", weight="MEDIUM")
+    text_part(x, "hr_label", 165, 286, 120, 16, 13, ACCENT, content="BPM", weight="MEDIUM")
     x.close("Group")
 
     # ---- Next event complication -------------------------------------------
     x.comment("Bottom: next calendar event (user can pick any SHORT_TEXT / LONG_TEXT provider)")
-    cw, ch = 236, 52
+    cw, ch = 240, 58
     cx, cy = C - cw / 2, 314
     x.open("ComplicationSlot", slotId=0, name="next_event", displayName="@string/slot_bottom",
            x=cx, y=cy, width=cw, height=ch, supportedTypes="LONG_TEXT SHORT_TEXT EMPTY",
@@ -353,16 +353,16 @@ def build_xml() -> str:
 
     x.open("Complication", type="LONG_TEXT")
     pill()
-    text_part(x, "event_time", 18, 7, cw - 36, 18, 13, ACCENT, template=("%s", ["[COMPLICATION.TITLE]"]),
+    text_part(x, "event_time", 18, 7, cw - 36, 20, 15, ACCENT, template=("%s", ["[COMPLICATION.TITLE]"]),
               weight="MEDIUM")
-    text_part(x, "event_title", 18, 24, cw - 36, 22, 16, WHITE, template=("%s", ["[COMPLICATION.TEXT]"]))
+    text_part(x, "event_title", 18, 27, cw - 36, 24, 18, WHITE, template=("%s", ["[COMPLICATION.TEXT]"]))
     x.close("Complication")
 
     x.open("Complication", type="SHORT_TEXT")
     pill()
-    text_part(x, "short_title", 18, 7, cw - 36, 18, 13, ACCENT, template=("%s", ["[COMPLICATION.TITLE]"]),
+    text_part(x, "short_title", 18, 7, cw - 36, 20, 15, ACCENT, template=("%s", ["[COMPLICATION.TITLE]"]),
               weight="MEDIUM")
-    text_part(x, "short_text", 18, 24, cw - 36, 22, 16, WHITE, template=("%s", ["[COMPLICATION.TEXT]"]))
+    text_part(x, "short_text", 18, 27, cw - 36, 24, 18, WHITE, template=("%s", ["[COMPLICATION.TEXT]"]))
     x.close("Complication")
 
     x.open("Complication", type="EMPTY")
@@ -403,7 +403,7 @@ def build_xml() -> str:
         x.open("Complication", type="SHORT_TEXT")
         disc()
         icon(D / 2 - 9, 9, 18)
-        text_part(x, "value", 4, 27, D - 8, 20, 14, WHITE,
+        text_part(x, "value", 3, 27, D - 6, 20, 16, WHITE,
                   template=("%s", ["[COMPLICATION.TEXT]"]), weight="MEDIUM")
         x.close("Complication")
 
@@ -423,7 +423,7 @@ def build_xml() -> str:
                      " / max([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN], 1), 0, 1)")
         x.close("Arc")
         x.close("PartDraw")
-        text_part(x, "value", 6, D / 2 - 10, D - 12, 20, 14, WHITE,
+        text_part(x, "value", 6, D / 2 - 10, D - 12, 20, 16, WHITE,
                   template=("%s", ["[COMPLICATION.TEXT]"]), weight="MEDIUM")
         x.close("Complication")
 
@@ -575,19 +575,19 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
              col(LOW if data["batt"] <= 15 else acc))
         arcp(STEP_END - STEP_SPAN * min(data["step_pct"], 100) / 100, STEP_END, col(acc))
 
-        text(f'{data["batt"]}%', (58, 206, 104, 36), 27, col(WHITE))
-        text("BATTERY", (58, 242, 104, 18), 12, col(GREY), "Medium")
-        text(str(data["steps"]), (288, 206, 104, 36), 27, col(WHITE))
-        text("STEPS", (288, 242, 104, 18), 12, col(GREY), "Medium")
-        text(str(data["hr"]), (165, 254, 120, 32), 24, col(WHITE))
-        text("BPM", (165, 284, 120, 16), 11, col(acc), "Medium")
+        text(f'{data["batt"]}%', (50, 204, 120, 38), 32, col(WHITE))
+        text("BATTERY", (50, 244, 120, 18), 14, col(GREY), "Medium")
+        text(str(data["steps"]), (280, 204, 120, 38), 32, col(WHITE))
+        text("STEPS", (280, 244, 120, 18), 14, col(GREY), "Medium")
+        text(str(data["hr"]), (165, 254, 120, 32), 28, col(WHITE))
+        text("BPM", (165, 286, 120, 16), 13, col(acc), "Medium")
 
     da = 200 / 255 if ambient else 1
-    text(data["weekday"], (145, 74, 160, 22), 15, col(acc, da), "Medium")
-    text(str(data["day"]), (145, 94, 160, 44), 36, col(WHITE, da), "Light")
+    text(data["weekday"], (145, 72, 160, 24), 18, col(acc, da), "Medium")
+    text(str(data["day"]), (145, 94, 160, 46), 42, col(WHITE, da), "Light")
 
     # complication
-    cw, ch = 236, 52
+    cw, ch = 240, 58
     cx, cy = C - cw / 2, 314
     ca = 170 / 255 if ambient else 1
     layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
@@ -596,8 +596,8 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
                          fill=col("#FF0D0E10", ca), outline=col("#FF2A2D32", ca), width=int(1.5 * S))
     img.alpha_composite(layer)
     d = ImageDraw.Draw(img)
-    text(data["ev_time"], (cx + 18, cy + 7, cw - 36, 18), 13, col(acc, ca), "Medium")
-    text(data["ev_title"], (cx + 18, cy + 24, cw - 36, 22), 16, col(WHITE, ca))
+    text(data["ev_time"], (cx + 18, cy + 7, cw - 36, 20), 15, col(acc, ca), "Medium")
+    text(data["ev_title"], (cx + 18, cy + 27, cw - 36, 24), 18, col(WHITE, ca))
 
     # small circular slots
     if not ambient:
@@ -624,7 +624,7 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
                 d.pieslice([P(ix - 6), P(iy - 4), P(ix + 6), P(iy + 8)], 180, 360, fill=a)
                 d.line([P(ix - 9), P(iy + 2.5), P(ix + 9), P(iy + 2.5)], fill=a, width=int(1.6 * S))
             if val:
-                text(val, (cxp - R + 4, cyp - R + 27, SUB_D - 8, 20), 14, col(WHITE), "Medium")
+                text(val, (cxp - R + 3, cyp - R + 27, SUB_D - 6, 20), 16, col(WHITE), "Medium")
 
     # unread notification dot
     if data.get("unread", 0) > 0:
