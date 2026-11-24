@@ -16,7 +16,7 @@ Google 推奨の **Watch Face Format (WFF) v1** で作っているため、コ�
 | 上段の右 | 心拍数 | 計測値がないときは `--` を表示 |
 | 中段の左 | バッテリー残量 ＋ 左のゲージ | 15% 以下で数値とゲージが赤、充電中は数値がテーマカラーになる |
 | 中段の右 | 歩数 ＋ 右のゲージ | ゲージは歩数目標に対する達成率。10,000 歩以上は数値を少し小さく表示 |
-| 下半分 | 次の予定 | コンプリケーション。時刻と予定名（2 行まで）を大きく表示 |
+| 下半分 | 次の予定 | コンプリケーション。枠なしで、時刻と予定名（2 行まで）を大きく表示 |
 | 針 | 時針・分針・秒針 | 時針と分針はスケルトン風のスリット入り。秒針はテーマカラー |
 
 ## カスタマイズ（ウォッチフェイスを長押し →「カスタマイズ」）
@@ -76,9 +76,13 @@ Android Studio（または Android SDK と JDK 17）がある環境で、次の�
    ```bash
    adb pair <IP>:<ペア設定用ポート>     # ウォッチに表示されたコードを入力
    adb connect <IP>:<ポート>
-   adb install watchface/build/outputs/apk/debug/watchface-debug.apk
+   adb install -r watchface/build/outputs/apk/debug/watchface-debug.apk
    ```
 4. ウォッチフェイスを長押しし、一覧から「Meridian」を選ぶ
+
+### 更新するとき
+テスト用の署名鍵（`watchface/debug.keystore`）を固定しているので、新しい APK は `adb install -r` で上書きインストールできます。アンインストールは不要で、テーマなどの設定も残ります。
+この鍵はテスト専用です。Google Play で公開するときは使わないでください。
 
 ## Google Play で公開するとき
 - `watchface/build.gradle.kts` の `applicationId` と `namespace` を、自分専用の ID に変更してください

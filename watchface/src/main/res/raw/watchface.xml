@@ -469,12 +469,6 @@
             <BoundingRoundBox x="0" y="0" width="290" height="126" cornerRadius="30" />
             <Variant mode="AMBIENT" target="alpha" value="170" />
             <Complication type="LONG_TEXT">
-                <PartDraw name="card" x="0" y="0" width="290" height="126">
-                    <RoundRectangle x="1" y="1" width="288" height="124" cornerRadiusX="30" cornerRadiusY="30">
-                        <Stroke color="#FF2A2D32" thickness="1.5" />
-                        <Fill color="#FF0D0E10" />
-                    </RoundRectangle>
-                </PartDraw>
                 <PartText name="event_time" x="16" y="6" width="258" height="35">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
                         <Font family="SYNC_TO_DEVICE" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
@@ -487,12 +481,6 @@
                 </PartText>
             </Complication>
             <Complication type="SHORT_TEXT">
-                <PartDraw name="card" x="0" y="0" width="290" height="126">
-                    <RoundRectangle x="1" y="1" width="288" height="124" cornerRadiusX="30" cornerRadiusY="30">
-                        <Stroke color="#FF2A2D32" thickness="1.5" />
-                        <Fill color="#FF0D0E10" />
-                    </RoundRectangle>
-                </PartDraw>
                 <PartText name="event_time" x="16" y="6" width="258" height="35">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
                         <Font family="SYNC_TO_DEVICE" size="20" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
@@ -505,12 +493,6 @@
                 </PartText>
             </Complication>
             <Complication type="EMPTY">
-                <PartDraw name="card" x="0" y="0" width="290" height="126">
-                    <RoundRectangle x="1" y="1" width="288" height="124" cornerRadiusX="30" cornerRadiusY="30">
-                        <Stroke color="#FF2A2D32" thickness="1.5" />
-                        <Fill color="#FF0D0E10" />
-                    </RoundRectangle>
-                </PartDraw>
             </Complication>
         </ComplicationSlot>
         <!-- Hands -->

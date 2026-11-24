@@ -48,7 +48,7 @@ BATT_POS, STEPS_POS = (102, 198), (348, 198)
 WEATHER_POS, HR_POS = (166, 130), (284, 130)
 OUTER_VALUE, OUTER_VALUE_LONG, INNER_VALUE = 24, 20, 21
 
-# Calendar card: the whole lower half
+# Calendar area (text only, no card): the whole lower half
 CAL_W, CAL_H, CAL_Y, CAL_RADIUS = 290, 126, 262, 30
 CAL_TIME_SIZE, CAL_TITLE_SIZE = 20, 22
 
@@ -499,25 +499,14 @@ def build_xml() -> str:
     x.leaf("BoundingRoundBox", x=0, y=0, width=cw, height=ch, cornerRadius=CAL_RADIUS)
     x.leaf("Variant", mode="AMBIENT", target="alpha", value=170)
 
-    def card() -> None:
-        x.open("PartDraw", name="card", x=0, y=0, width=cw, height=ch)
-        x.open("RoundRectangle", x=1, y=1, width=cw - 2, height=ch - 2,
-               cornerRadiusX=CAL_RADIUS, cornerRadiusY=CAL_RADIUS)
-        x.leaf("Stroke", color=EDGE, thickness=1.5)
-        x.leaf("Fill", color=CARD)
-        x.close("RoundRectangle")
-        x.close("PartDraw")
-
     for ctype in ("LONG_TEXT", "SHORT_TEXT"):
         x.open("Complication", type=ctype)
-        card()
         text_part(x, "event_time", 16, 10, cw - 32, 28, CAL_TIME_SIZE, ACCENT,
                   template=("%s", ["[COMPLICATION.TITLE]"]), weight="MEDIUM")
         text_part(x, "event_title", 16, 40, cw - 32, ch - 48, CAL_TITLE_SIZE, WHITE,
                   template=("%s", ["[COMPLICATION.TEXT]"]), weight="MEDIUM", max_lines=2)
         x.close("Complication")
     x.open("Complication", type="EMPTY")
-    card()
     x.close("Complication")
     x.close("ComplicationSlot")
 
@@ -689,15 +678,8 @@ def render_preview(path: pathlib.Path, theme_idx=0, ambient=False, scale_out=1.0
     da = 200 / 255 if ambient else 1
     text(data["date"], C, DATE_Y, DATE_SIZE, col(acc_hex, da), "Medium")
 
-    # calendar card
+    # calendar (text only, no card background)
     ca = 170 / 255 if ambient else 1
-    x0 = C - CAL_W / 2
-    layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
-    ImageDraw.Draw(layer).rounded_rectangle(
-        [P(x0 + 1), P(CAL_Y + 1), P(x0 + CAL_W - 1), P(CAL_Y + CAL_H - 1)], radius=P(CAL_RADIUS),
-        fill=col(CARD, ca), outline=col(EDGE, ca), width=int(1.5 * S))
-    img.alpha_composite(layer)
-    d = ImageDraw.Draw(img)
     text(data["ev_time"], C, CAL_Y + 24, CAL_TIME_SIZE, col(acc_hex, ca), "Medium")
     lines_ = data["ev_title"][:2]
     lh = CAL_TITLE_SIZE * 1.45

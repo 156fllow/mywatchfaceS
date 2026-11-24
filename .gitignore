@@ -9,4 +9,6 @@ captures/
 .cxx/
 __pycache__/
 *.keystore
+# Shared test-only debug key (see watchface/build.gradle.kts)
+!watchface/debug.keystore
 *.jks
