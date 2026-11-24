@@ -40,7 +40,7 @@ BATT_START, BATT_SPAN = 240, 60    # left side, filling upward from bottom-left
 STEP_END, STEP_SPAN = 120, 60      # right side, filling upward from bottom-right
 
 # Date line at the top
-DATE_Y, DATE_SIZE = 76, 18
+DATE_Y, DATE_SIZE = 76, 20
 
 # Four discs in the upper half. Battery / steps sit right next to their gauges.
 OUTER_R, INNER_R = 38, 34
