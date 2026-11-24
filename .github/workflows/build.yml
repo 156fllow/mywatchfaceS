@@ -24,7 +24,7 @@ jobs:
       # and generate preview images on CI (so the build works even without committed PNGs)
       - name: Generate watch face resources
         run: |
-          sudo apt-get update -q && sudo apt-get install -y -q fonts-inter
+          sudo apt-get update -q && sudo apt-get install -y -q fonts-inter fonts-ipafont-gothic
           pip install pillow
           python3 tools/generate.py
           git diff --exit-code -- watchface/src/main/res/raw watchface/src/main/res/values watchface/src/main/res/values-ja
