@@ -49,7 +49,7 @@ WEATHER_POS, HR_POS = (166, 130), (284, 130)
 OUTER_VALUE, OUTER_VALUE_LONG, INNER_VALUE = 28, 23, 25
 
 # Calendar area (text only, no card): the whole lower half
-CAL_W, CAL_H, CAL_Y, CAL_RADIUS = 290, 126, 262, 30
+CAL_W, CAL_H, CAL_Y, CAL_RADIUS = 306, 126, 262, 30  # text area = CAL_W - 16 (12 chars at size 24)
 CAL_TIME_SIZE, CAL_TITLE_SIZE = 22, 24
 
 # Hands (length from center / tail length / width)
@@ -504,9 +504,9 @@ def build_xml() -> str:
 
     for ctype in ("LONG_TEXT", "SHORT_TEXT"):
         x.open("Complication", type=ctype)
-        text_part(x, "event_time", 16, 10, cw - 32, 28, CAL_TIME_SIZE, ACCENT,
+        text_part(x, "event_time", 8, 10, cw - 16, 28, CAL_TIME_SIZE, ACCENT,
                   template=("%s", ["[COMPLICATION.TITLE]"]), weight="MEDIUM")
-        text_part(x, "event_title", 16, 40, cw - 32, ch - 48, CAL_TITLE_SIZE, WHITE,
+        text_part(x, "event_title", 8, 40, cw - 16, ch - 48, CAL_TITLE_SIZE, WHITE,
                   template=("%s", ["[COMPLICATION.TEXT]"]), weight="MEDIUM", max_lines=2)
         x.close("Complication")
     x.open("Complication", type="EMPTY")

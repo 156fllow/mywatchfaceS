@@ -472,29 +472,29 @@
             </Complication>
         </ComplicationSlot>
         <!-- Lower half: next calendar event (any SHORT_TEXT / LONG_TEXT provider can be chosen) -->
-        <ComplicationSlot slotId="0" name="next_event" displayName="@string/slot_bottom" x="80" y="262" width="290" height="126" supportedTypes="LONG_TEXT SHORT_TEXT EMPTY" isCustomizable="TRUE">
+        <ComplicationSlot slotId="0" name="next_event" displayName="@string/slot_bottom" x="72" y="262" width="306" height="126" supportedTypes="LONG_TEXT SHORT_TEXT EMPTY" isCustomizable="TRUE">
             <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="LONG_TEXT" />
-            <BoundingRoundBox x="0" y="0" width="290" height="126" cornerRadius="30" />
+            <BoundingRoundBox x="0" y="0" width="306" height="126" cornerRadius="30" />
             <Variant mode="AMBIENT" target="alpha" value="170" />
             <Complication type="LONG_TEXT">
-                <PartText name="event_time" x="16" y="5" width="258" height="38">
+                <PartText name="event_time" x="8" y="5" width="290" height="38">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
                         <Font family="SYNC_TO_DEVICE" size="22" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
                     </Text>
                 </PartText>
-                <PartText name="event_title" x="16" y="40" width="258" height="78">
+                <PartText name="event_title" x="8" y="40" width="290" height="78">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="2">
                         <Font family="SYNC_TO_DEVICE" size="24" weight="MEDIUM" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
                 </PartText>
             </Complication>
             <Complication type="SHORT_TEXT">
-                <PartText name="event_time" x="16" y="5" width="258" height="38">
+                <PartText name="event_time" x="8" y="5" width="290" height="38">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="1">
                         <Font family="SYNC_TO_DEVICE" size="22" weight="MEDIUM" color="[CONFIGURATION.theme.0]"><Template>%s<Parameter expression="[COMPLICATION.TITLE]" /></Template></Font>
                     </Text>
                 </PartText>
-                <PartText name="event_title" x="16" y="40" width="258" height="78">
+                <PartText name="event_title" x="8" y="40" width="290" height="78">
                     <Text align="CENTER" ellipsis="TRUE" maxLines="2">
                         <Font family="SYNC_TO_DEVICE" size="24" weight="MEDIUM" color="#FFF2F2F0"><Template>%s<Parameter expression="[COMPLICATION.TEXT]" /></Template></Font>
                     </Text>
