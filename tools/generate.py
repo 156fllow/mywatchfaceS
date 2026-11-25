@@ -40,17 +40,17 @@ BATT_START, BATT_SPAN = 240, 60    # left side, filling upward from bottom-left
 STEP_END, STEP_SPAN = 120, 60      # right side, filling upward from bottom-right
 
 # Date line at the top
-DATE_Y, DATE_SIZE = 76, 20
+DATE_Y, DATE_SIZE = 76, 22
 
 # Four discs in the upper half. Battery / steps sit right next to their gauges.
 OUTER_R, INNER_R = 38, 34
 BATT_POS, STEPS_POS = (102, 198), (348, 198)
 WEATHER_POS, HR_POS = (166, 130), (284, 130)
-OUTER_VALUE, OUTER_VALUE_LONG, INNER_VALUE = 24, 20, 21
+OUTER_VALUE, OUTER_VALUE_LONG, INNER_VALUE = 28, 23, 25
 
 # Calendar area (text only, no card): the whole lower half
 CAL_W, CAL_H, CAL_Y, CAL_RADIUS = 290, 126, 262, 30
-CAL_TIME_SIZE, CAL_TITLE_SIZE = 20, 22
+CAL_TIME_SIZE, CAL_TITLE_SIZE = 22, 24
 
 # Hands (length from center / tail length / width)
 HOUR_LEN, HOUR_TAIL, HOUR_W = 118, 16, 11
@@ -373,12 +373,15 @@ def build_xml() -> str:
     icon_battery(x, r, r - r * 0.38, ACCENT)
     x.open("Condition")
     x.open("Expressions")
+    x.raw('<Expression name="full">[BATTERY_PERCENT] &gt;= 100</Expression>')
     x.raw('<Expression name="charging">[BATTERY_CHARGING_STATUS]</Expression>')
     x.raw('<Expression name="low">[BATTERY_PERCENT] &lt;= 15</Expression>')
     x.close("Expressions")
-    for expr, color in (("charging", ACCENT), ("low", LOW)):
+    # "100%" is one character longer, so it uses the smaller size to stay inside the disc
+    for expr, color, size in (("full", WHITE, OUTER_VALUE_LONG), ("charging", ACCENT, OUTER_VALUE),
+                              ("low", LOW, OUTER_VALUE)):
         x.open("Compare", expression=expr)
-        text_part(x, f"battery_value_{expr}", 4, r + r * 0.27 - 14, 2 * r - 8, 28, OUTER_VALUE, color,
+        text_part(x, f"battery_value_{expr}", 4, r + r * 0.27 - 14, 2 * r - 8, 28, size, color,
                   template=("%d%%", ["[BATTERY_PERCENT]"]), weight="MEDIUM")
         x.close("Compare")
     x.open("Default")
