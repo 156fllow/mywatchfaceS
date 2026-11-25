@@ -80,6 +80,20 @@ Android Studio（または Android SDK と JDK 17）がある環境で、次の�
    ```
 4. ウォッチフェイスを長押しし、一覧から「Meridian」を選ぶ
 
+### インストールとスクリーンショットを自動で行う（Windows）
+`tools/watch-install.ps1` を使うと、`adb connect` のあとの作業をまとめて実行できます。
+1. ダウンロードフォルダにある最新の `meridian-watchface*.zip` を展開する（すでに展開済みなら最新の APK を使う）
+2. 上書きインストールする（`adb install -r`）
+3. Meridian をウォッチフェイスに設定し、画面を点灯する
+4. スクリーンショットをダウンロードフォルダに保存して開く
+
+```powershell
+adb connect 192.168.x.x:ポート
+powershell -ExecutionPolicy Bypass -File .\watch-install.ps1
+# スクリーンショットだけ撮るとき
+powershell -ExecutionPolicy Bypass -File .\watch-install.ps1 -ScreenshotOnly
+```
+
 ### 更新するとき
 テスト用の署名鍵（`watchface/debug.keystore`）を固定しているので、新しい APK は `adb install -r` で上書きインストールできます。アンインストールは不要で、テーマなどの設定も残ります。
 この鍵はテスト専用です。Google Play で公開するときは使わないでください。
