@@ -9,7 +9,7 @@
     2. ダウンロードフォルダから最新の APK を探す
        (新しい meridian-watchface*.zip があれば自動で展開する)
     3. 上書きインストール (adb install -r)
-    4. Meridian をウォッチフェイスに設定し、画面を点灯
+    4. Meridian をウォッチフェイスに設定 (実行中は画面を点けたままにする)
     5. スクリーンショットを撮ってダウンロードフォルダに保存し、開く
 
 .EXAMPLE
@@ -34,7 +34,12 @@ $ErrorActionPreference = "Continue"
 $Package = "com.mywatchfaces.meridian"
 
 function Step($msg) { Write-Host "`n== $msg" -ForegroundColor Cyan }
-function Fail($msg) { Write-Host "エラー: $msg" -ForegroundColor Red; exit 1 }
+function Fail($msg) {
+    Write-Host "エラー: $msg" -ForegroundColor Red
+    # 画面を点けたままにする設定を戻してから終了する
+    if ($script:Device) { & $Adb -s $script:Device shell svc power stayon false 2>&1 | Out-Null }
+    exit 1
+}
 
 # ---- adb -----------------------------------------------------------------
 if (-not (Test-Path $Adb)) {
@@ -54,6 +59,21 @@ if (-not $Device) {
 if (-not $Device) { Fail "ウォッチが見つかりません。先に adb connect <IP>:<ポート> を実行してください。" }
 $model = "$(& $Adb -s $Device shell getprop ro.product.model)".Trim()
 Write-Host "接続先: $Device ($model)"
+
+# スクリプトの実行中は画面を点けたままにする (最後に元に戻す)
+function Wake-Watch {
+    & $Adb -s $Device shell input keyevent KEYCODE_WAKEUP | Out-Null
+    # 画面が実際に点く (Awake になる) まで最大 5 秒待つ
+    for ($i = 0; $i -lt 10; $i++) {
+        $state = "$(& $Adb -s $Device shell dumpsys power)"
+        if ($state -match "mWakefulness=Awake") { return $true }
+        Start-Sleep -Milliseconds 500
+        & $Adb -s $Device shell input keyevent KEYCODE_WAKEUP | Out-Null
+    }
+    return $false
+}
+& $Adb -s $Device shell svc power stayon true 2>&1 | Out-Null
+$null = Wake-Watch
 
 if (-not $ScreenshotOnly) {
     # ---- 2. APK ------------------------------------------------------------
@@ -100,13 +120,16 @@ if (-not $ScreenshotOnly) {
 
 # ---- 5. screenshot ---------------------------------------------------------
 Step "スクリーンショット"
-& $Adb -s $Device shell input keyevent KEYCODE_WAKEUP | Out-Null
+if (Wake-Watch) { Write-Host "画面: 点灯中" } else { Write-Host "画面を点灯できませんでした。ウォッチをタップしてください。" -ForegroundColor Yellow }
+# 点灯直後のアニメーションが終わるのを待つ
 Start-Sleep -Seconds 2
 $remote = "/sdcard/meridian_screenshot.png"
 $out = Join-Path $OutDir ("meridian_" + (Get-Date -Format "yyyyMMdd_HHmmss") + ".png")
 & $Adb -s $Device shell screencap -p $remote | Out-Null
-& $Adb -s $Device pull $remote $out | Out-Null
+& $Adb -s $Device pull $remote $out 2>&1 | Out-Null
 & $Adb -s $Device shell rm $remote | Out-Null
+# 画面を点けたままにする設定を元に戻す
+& $Adb -s $Device shell svc power stayon false 2>&1 | Out-Null
 if (-not (Test-Path $out)) { Fail "スクリーンショットを保存できませんでした。" }
 
 Write-Host "`n保存先: $out" -ForegroundColor Green
