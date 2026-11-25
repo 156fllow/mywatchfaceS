@@ -16,6 +16,18 @@ android {
         versionName = "1.0.0"
     }
 
+    // Fixed debug key shared by local and CI builds, so updates install over the
+    // previous version with `adb install -r` (no uninstall, settings are kept).
+    // This key is for testing only. Never use it to publish on Google Play.
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
         release {
             // WFF watch faces must not contain dex files (minSdk >= 33).
